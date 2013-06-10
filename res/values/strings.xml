@@ -1,5 +1,7 @@
 <resources>
 
     <string name="app_name">ATB</string>
+    <string name="login_txt">Connecter</string>
+    <string name="logout_txt">Déconnecter</string>
 
 </resources>

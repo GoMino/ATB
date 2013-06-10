@@ -38,17 +38,17 @@ import android.view.animation.Animation.AnimationListener;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-public class Tools {
+public class ToolBox {
 	
-	private final static String TAG 					= Tools.class.getSimpleName();
-	private static final String SERIALIZED_DATA_PATH 	= Environment.getExternalStorageDirectory().getAbsolutePath() + "";
+	private final static String TAG 					= ToolBox.class.getSimpleName();
+	public static String SERIALIZED_DATA_PATH 	= Environment.getExternalStorageDirectory().getAbsolutePath() + "";
 	public static enum IMAGETYPE{BACKEND, WEB};
 	private ImageManagerInterface mImageManager;
-	private static Tools sInstance;
+	private static ToolBox sInstance;
 	
-	public static Tools getInstance() {
+	public static ToolBox getInstance() {
 		if (sInstance == null)
-			sInstance = new Tools();
+			sInstance = new ToolBox();
 		return sInstance;
 	}
 	

@@ -9,6 +9,7 @@ package com.android.toolbox;
  * to the developer when an error appears)
  * 
  * @author Spobo
+ * @author Gomino
  * 
  */
 public class Log {
