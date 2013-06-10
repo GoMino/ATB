@@ -370,12 +370,22 @@ public class ToolBox {
 	 */
 	public static void startAnimation(final View v, final int resId, AnimationListener l){
 		Animation anim = AnimationUtils.loadAnimation(v.getContext(),resId);
-		startAnimation(v, anim, l);
+		startAnimation(v, anim, 0, l);
 	}
 	
+	public static void startAnimation(final View v, final int resId, long duration, AnimationListener l){
+		Animation anim = AnimationUtils.loadAnimation(v.getContext(),resId);
+		startAnimation(v, anim, duration, l);
+    }
+	
 	public static void startAnimation(final View v, Animation anim, AnimationListener l){
-
+		startAnimation(v, anim, 0, l);
+	}
+	
+	public static void startAnimation(final View v, Animation anim, long duration, AnimationListener l){
+        
 		if(v!=null){    // can be null, after change of orientation
+			if(duration>0) anim.setDuration(duration);
 //			anim.setFillAfter(true);
 //			anim.setFillEnabled(true);
 //			anim.setInterpolator();
@@ -384,6 +394,7 @@ public class ToolBox {
 			v.startAnimation(anim);                 
 		}
 	}
+    
 	
 	public static String MD5(String md5) {
 		   try {
