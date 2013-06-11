@@ -48,6 +48,7 @@ public class CheckableRelativeLayout extends RelativeLayout implements Checkable
 		
 		for (Checkable c : checkableViews) {
 			c.setChecked(isChecked);
+//			Log.d(TAG,"view at position "+ checkableViews.indexOf(c) + " is checked?" + isChecked);
 		}
 //		Log.e(TAG, "set checked, we have " + checkableViews.size() + " checkable children");
 		this.isChecked = isChecked;

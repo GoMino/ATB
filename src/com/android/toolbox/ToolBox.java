@@ -66,7 +66,7 @@ public class ToolBox {
 	public interface ImageManagerInterface{
 		public void initialize(Context context, String appName);
 		public void pickupDefaultImage(int resourceId, ImageView view);
-		public void downloadImage(String URL, final ImageView imageView, boolean thumbnailed, boolean animated, IMAGETYPE... type);
+		public void downloadImage(String uRL, ImageView imageView, boolean thumbnailed, boolean animated, Object extra, IMAGETYPE[] type);
 	}
 	
 	public static void pickupDefaultImage(int resourceId, ImageView view){
@@ -77,19 +77,31 @@ public class ToolBox {
 	
 	public static void downloadImage(String URL, ImageView imageView, IMAGETYPE... type){
 		if(getInstance().getImageManager()!=null){
-			getInstance().getImageManager().downloadImage(URL, imageView, false, true, type);
+			getInstance().getImageManager().downloadImage(URL, imageView, false, true, null, type);
+		}
+	}
+	
+	public static void downloadImage(String URL, ImageView imageView, Object extra, IMAGETYPE... type){
+		if(getInstance().getImageManager()!=null){
+			getInstance().getImageManager().downloadImage(URL, imageView, false, true, extra, type);
 		}
 	}
 	
 	public static void downloadImageWithoutFade(String URL, ImageView imageView, IMAGETYPE... type){
 		if(getInstance().getImageManager()!=null){
-			getInstance().getImageManager().downloadImage(URL, imageView, false, false, type);
+			getInstance().getImageManager().downloadImage(URL, imageView, false, false, null, type);
 		}
 	}
 	
 	public static void downloadImage(String URL, final ImageView imageView, boolean thumbnailed, boolean animated, IMAGETYPE... type){
 		if(getInstance().getImageManager()!=null){
-			getInstance().getImageManager().downloadImage(URL, imageView, thumbnailed, animated, type);
+			getInstance().getImageManager().downloadImage(URL, imageView, thumbnailed, animated, null, type);
+		}
+	}
+	
+	public static void downloadImage(String URL, final ImageView imageView, boolean thumbnailed, boolean animated, Object extra, IMAGETYPE... type){
+		if(getInstance().getImageManager()!=null){
+			getInstance().getImageManager().downloadImage(URL, imageView, thumbnailed, animated, extra, type);
 		}
 	}
 

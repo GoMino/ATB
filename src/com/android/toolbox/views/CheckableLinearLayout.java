@@ -17,6 +17,7 @@ public class CheckableLinearLayout extends LinearLayout implements Checkable {
 	private boolean isChecked;
 	private List<Checkable> checkableViews;
 	private boolean mBlocked = false;
+	private boolean mBlockStateChanged	= false;
 	
 	public CheckableLinearLayout(Context context) {
 		super(context);
@@ -63,6 +64,25 @@ public class CheckableLinearLayout extends LinearLayout implements Checkable {
 			c.toggle();
 		}
 		refreshDrawableState();
+	}
+	
+	public void setBlockStateChange(boolean block){
+		mBlockStateChanged = block;
+		refreshDrawableState();
+	}
+	
+	@Override
+	protected int[] onCreateDrawableState(int extraSpace) {
+		if (mBlockStateChanged && !isPressed()){
+			final int[] drawableState = new int[extraSpace];
+			return drawableState;
+		}else{
+			final int[] drawableState = super.onCreateDrawableState(extraSpace + 1);
+			if (isChecked()) {
+				mergeDrawableStates(drawableState, new int[]{android.R.attr.state_checked});
+			}
+			return drawableState;
+		}
 	}
 
 	@Override

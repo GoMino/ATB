@@ -30,7 +30,8 @@ public abstract class BaseDefaultHandler extends DefaultHandler{
 	}
 
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-		mSb.delete(0, mSb.length());
+//		mSb.delete(0, mSb.length());
+		mSb.setLength(0);
 		localName = (StringUtility.notEmpty(localName)) ? localName : qName;
 		if(isLogEnabled)
 			Log.e(TAG, "startElement\t: " + localName);

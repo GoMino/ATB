@@ -39,7 +39,6 @@ public class FacebookManager {
 	private static final String TAG = FacebookManager.class.getSimpleName();
 	private static FacebookManager instance = null;
 	private Facebook facebook = null;
-	private Facebook facebookapp = null;
 	private Context context;
 	private String[] permissions;
 	private Handler mHandler;
@@ -55,7 +54,6 @@ public class FacebookManager {
 	//private static String EURO2012_ID = "301256806313";
 
 	private FacebookManager(String appId, String[] permissions){
-		this.facebookapp = new Facebook(appId);
 		this.facebook = new Facebook(appId);
 		this.mGraphAPIListeners = new HashSet<FacebookManager.FacebookGraphAPIRequestListener>();
 		this.mSessionListener = new SessionListener();

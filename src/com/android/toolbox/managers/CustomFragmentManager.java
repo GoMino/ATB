@@ -60,18 +60,17 @@ public class CustomFragmentManager {
 			return false;
 		}
 	}
+	
+	public boolean insertFragmentToActivity(int id, Fragment f, boolean addToBackstack, String stackName){
+		return insertFragmentToActivity(id, f, addToBackstack, stackName, false);
+	}
 
 	/**
 	 * completely clear the backstack
 	 */
 	public void clearBackstack(){
-//		mFragmentManager.popBackStackImmediate(mFragmentManager.getBackStackEntryAt(0).getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-//		Log.e(TAG,"stack cleared  - stack entry count :" + mFragmentManager.getBackStackEntryCount() + " list size : " + mFragmentManager.getBackStackEntryCount());
-	}
-	
-	public void clearBackstackTmp(){
 		mFragmentManager.popBackStackImmediate(mFragmentManager.getBackStackEntryAt(0).getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-//		Log.e(TAG,"stack cleared  - stack entry count :" + mFragmentManager.getBackStackEntryCount() + " list size : " + mFragmentManager.getBackStackEntryCount());
+		Log.v(TAG,"[clearBackstack] stack cleared  - stack entry count :" + mFragmentManager.getBackStackEntryCount() + " list size : " + mFragmentManager.getBackStackEntryCount());
 	}
 
 	

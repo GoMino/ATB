@@ -13,6 +13,7 @@ public class RequestInfo {
 	private int id;
 	private String name;
 	private Map<String,Object> params;
+	public final static String RESPONSE_FORMAT_KEY = "responseFormatKey";
 	
 	public RequestInfo(String  name){
 		this.name = name;

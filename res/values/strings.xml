@@ -3,5 +3,11 @@
     <string name="app_name">ATB</string>
     <string name="login_txt">Connecter</string>
     <string name="logout_txt">Déconnecter</string>
+    
+    <string name="tweet_success">Your tweet has been sent successfully</string>
+	<string name="tweet_error">Failed to send your tweet</string>
+	<string name="tweet_error_duplicate">Failed to send your tweet. Note: you can\'t send duplicate tweet</string>
+	<string name="tweet_error_network">Failed to send your tweet, Twitter is unreachable</string>
+	<string name="tweet_error_date_time">Failed to connect to Twitter, please check your device time and time</string>
 
 </resources>

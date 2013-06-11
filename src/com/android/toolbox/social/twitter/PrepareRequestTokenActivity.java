@@ -45,7 +45,8 @@ public class PrepareRequestTokenActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		try {
-			this.consumer = new CommonsHttpOAuthConsumer(Constants.CONSUMER_KEY, Constants.CONSUMER_SECRET);
+			Log.e(TAG, "consumerKey:" + mTwitterManager.getConsumerKey() + " consumerSecret:" + mTwitterManager.getConsumerSecret());
+			this.consumer = new CommonsHttpOAuthConsumer(mTwitterManager.getConsumerKey(), mTwitterManager.getConsumerSecret());
 			this.provider = new CommonsHttpOAuthProvider(Constants.REQUEST_URL,Constants.ACCESS_URL,Constants.AUTHORIZE_URL);
 		} catch (Exception e) {
 			Log.e(TAG, "Error creating consumer / provider",e);
@@ -126,13 +127,17 @@ public class PrepareRequestTokenActivity extends Activity {
 		private void executeAfterAccessTokenRetrieval() {
 			Bundle bundle = getIntent().getExtras();
 			if (bundle != null){
+				long retweetId = bundle.getLong("retweet_id");
 				String msg = bundle.getString("tweet_msg");
 				byte[] byteArray = bundle.getByteArray("tweet_img");
 				try {
-					if (byteArray!=null){
+					if (retweetId != 0) {
+						mTwitterManager.retweet(prefs, retweetId);
+					}else if (byteArray!=null){
+						String imageName = bundle.getString("tweet_img_name");
 						InputStream imgData = new ByteArrayInputStream(byteArray);
 						Log.e(TAG,"sendTweetWithMedia");
-						mTwitterManager.sendTweetWithMedia(prefs, msg, imgData);
+						mTwitterManager.sendTweetWithMedia(prefs, msg, imageName, imgData);
 					}else{
 						Log.e(TAG,"sendTweet");
 						mTwitterManager.sendTweet(prefs, msg);
@@ -148,6 +153,17 @@ public class PrepareRequestTokenActivity extends Activity {
 	protected void onRestart() {
 		Log.e(TAG, "onRestart");
 		//onRestart is called when we come back from the browser, using the back button, so we don't need to display this activity
+		// onRestart is called when we come back from the browser, using the
+		// back button, so we don't need to display this activity
+		new AsyncTask<Void, Void, Void>() {
+
+			@Override
+			protected Void doInBackground(Void... params) {
+				mTwitterManager.onLoginCanceled();
+				return null;
+			}
+		}.execute();
+		
 		finish();
 		super.onRestart();
 	}	
