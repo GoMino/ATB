@@ -218,7 +218,7 @@ public class TwitterManager {
 		
 		//		AccessToken a = new AccessToken(token,secret);
 
-		Configuration conf = getTweetConfiguration(prefs);
+		Configuration conf = getTweetConfiguration(prefs, false);
 
 		Twitter twitter = new TwitterFactory(conf).getInstance();
 		//		twitter.setOAuthConsumer(Constants.CONSUMER_KEY, Constants.CONSUMER_SECRET);
@@ -277,7 +277,7 @@ public class TwitterManager {
 
 	public void getUserInfo(){
 
-		Configuration conf = getTweetConfiguration(prefs);
+		Configuration conf = getTweetConfiguration(prefs, false);
 
 		TwitterListener listener = new TwitterAdapter(){	
 
@@ -335,7 +335,7 @@ public class TwitterManager {
 			String token = prefs.getString(OAuth.OAUTH_TOKEN, "");
 			String secret = prefs.getString(OAuth.OAUTH_TOKEN_SECRET, "");
 
-			Configuration conf = getTweetConfiguration(prefs);
+			Configuration conf = getTweetConfiguration(prefs, true);
 
 			AsyncTwitterFactory factory = new AsyncTwitterFactory(conf, listener);
 			asyncTwitter = factory.getInstance();
@@ -385,7 +385,7 @@ public class TwitterManager {
 		if (getUser() != null && isAuthenticated(prefs)) {
 			// authanticated user rate limit 350 request an hour base on token
 
-			Configuration conf = getTweetConfiguration(prefs);
+			Configuration conf = getTweetConfiguration(prefs, true);
 
 			AsyncTwitterFactory factory = new AsyncTwitterFactory(conf, listener);
 			asyncTwitter = factory.getInstance();
@@ -405,18 +405,23 @@ public class TwitterManager {
 
 	}
 	
-	private Configuration getTweetConfiguration(SharedPreferences prefs){
+	private Configuration getTweetConfiguration(SharedPreferences prefs, boolean includeEntities){
 		String token = prefs.getString(OAuth.OAUTH_TOKEN, "");
 		String secret = prefs.getString(OAuth.OAUTH_TOKEN_SECRET, "");
-
-		return new ConfigurationBuilder().setMediaProviderAPIKey(mMediaProviderApiKey)
-				.setOAuthConsumerKey(mConsumerKey).setOAuthConsumerSecret(mConsumerSecret)
-				.setOAuthAccessToken(token).setOAuthAccessTokenSecret(secret).build();
+		ConfigurationBuilder builder = new ConfigurationBuilder()
+				.setMediaProviderAPIKey(mMediaProviderApiKey)
+				.setOAuthConsumerKey(mConsumerKey)
+				.setOAuthConsumerSecret(mConsumerSecret)
+				.setOAuthAccessToken(token)
+				.setOAuthAccessTokenSecret(secret);
+		if(includeEntities)
+			builder.setIncludeEntitiesEnabled(true);
+		return builder.build();
 
 	}
 
 	public void sendTweet(SharedPreferences prefs,String msg) throws Exception {
-		Configuration conf = getTweetConfiguration(prefs);
+		Configuration conf = getTweetConfiguration(prefs, false);
 
 		Twitter twitter = new TwitterFactory(conf).getInstance();
 		//		Twitter twitter = new TwitterFactory().getInstance();
@@ -450,7 +455,7 @@ public class TwitterManager {
 
 
 	public void sendTweetWithMedia(SharedPreferences prefs,String msg, String imageName, InputStream media) throws Exception {
-		Configuration conf = getTweetConfiguration(prefs);
+		Configuration conf = getTweetConfiguration(prefs, false);
 
 		ImageUpload upload = new ImageUploaderFactory(conf).getInstance(MediaProvider.TWITPIC);
 		try {
@@ -479,7 +484,7 @@ public class TwitterManager {
 	}	
 	
 	public void retweet(SharedPreferences prefs, long tweetId) {
-		Configuration conf = getTweetConfiguration(prefs);
+		Configuration conf = getTweetConfiguration(prefs, false);
 		
 		Twitter twitter = new TwitterFactory(conf).getInstance();
 		// Twitter twitter = new TwitterFactory().getInstance();
