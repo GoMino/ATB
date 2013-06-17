@@ -11,7 +11,7 @@ import twitter4j.TwitterFactory;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 import twitter4j.media.ImageUpload;
-import twitter4j.media.ImageUploaderFactory;
+import twitter4j.media.ImageUploadFactory;
 import twitter4j.media.MediaProvider;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;

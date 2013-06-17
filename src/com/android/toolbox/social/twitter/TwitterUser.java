@@ -3,6 +3,8 @@ package com.android.toolbox.social.twitter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
@@ -27,8 +29,14 @@ public class TwitterUser {
 		mPic=getImage(user.getProfileImageURL());
 	}
 	
-	public Bitmap getImage(URL url) {
+	public Bitmap getImage(String link) {
 		try {
+			//http://stackoverflow.com/questions/573184/java-convert-string-to-valid-uri-object
+			String urlStr = link;
+			URL url = new URL(urlStr);
+			URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef());
+			url = uri.toURL();
+			
 			Object content = url.getContent();
 			InputStream is = (InputStream) content;
 			Bitmap b = BitmapFactory.decodeStream(is);
@@ -36,18 +44,19 @@ public class TwitterUser {
 			return b;
 		} catch (MalformedURLException e) {
 			Log.printStackTrace(e);
-			return null;
 		} catch (IOException e) {
 			Log.printStackTrace(e);
-			return null;
+		} catch (URISyntaxException e) {
+			Log.printStackTrace(e);
 		}
+		return null;
 	}
 
 	public String getDescription() {
 		return mUser.getDescription();
 	}
 
-	public int getId() {
+	public long getId() {
 		return mUser.getId();
 	}
 	
@@ -90,7 +99,7 @@ public class TwitterUser {
 		return mUser.getProfileBackgroundImageUrl();
 	}
 
-	public URL getProfileImageURL() {
+	public String getProfileImageURL() {
 		return mUser.getProfileImageURL();
 	}
 
@@ -110,7 +119,7 @@ public class TwitterUser {
 		return mUser.getTimeZone();
 	}
 
-	public URL getURL() {
+	public String getURL() {
 		return mUser.getURL();
 	}
 
