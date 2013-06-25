@@ -308,34 +308,34 @@ public class TwitterManager {
 
 	public void getPublicUserTimeline(final String username) {
 
-		Twitter asyncTwitter = null;
+		AsyncTwitter asyncTwitter = null;
 
-//		TwitterListener listener = new TwitterAdapter() {
-//
-//			@Override
-//			public void gotUserTimeline(ResponseList<Status> statuses) {
-//				Log.e(TAG, "gotUserTimeline:" + username);
-//				notifySucribers(Event.TWITTER_TIMELINE_RECEIVED, statuses);
-//			}
-//			
-//			@Override
-//			public void onException(TwitterException ex, TwitterMethod method) {
-//				Log.e("Your credentials do not allow access to this resource", ex.getErrorMessage());
-//				// if (method == TwitterMethod.VERIFY_CREDENTIALS) {
-//				Log.printStackTrace(ex);
-//				// } else {
-//				// throw new AssertionError("Should not happen");
-//				// }
-//				notifySucribers(Event.TWITTER_TIMELINE_ERROR, ex.getMessage());
-//			}
-//
-//			
-//		};
+		TwitterListener listener = new TwitterAdapter() {
+
+			@Override
+			public void gotUserTimeline(ResponseList<Status> statuses) {
+				Log.e(TAG, "gotUserTimeline:" + username);
+				notifySucribers(Event.TWITTER_TIMELINE_RECEIVED, statuses);
+			}
+			
+			@Override
+			public void onException(TwitterException ex, TwitterMethod method) {
+				Log.e("Your credentials do not allow access to this resource", ex.getErrorMessage());
+				// if (method == TwitterMethod.VERIFY_CREDENTIALS) {
+				Log.printStackTrace(ex);
+				// } else {
+				// throw new AssertionError("Should not happen");
+				// }
+				notifySucribers(Event.TWITTER_TIMELINE_ERROR, ex.getMessage());
+			}
+
+			
+		};
 
 		if (getUser() != null && isAuthenticated(prefs)) {
 			// authanticated user rate limit 350 request an hour base on token
 			Configuration conf = getTweetConfiguration(prefs, true);
-			asyncTwitter = new TwitterFactory(conf).getInstance();
+			asyncTwitter = new AsyncTwitterFactory(conf).getInstance();
 			Log.e(TAG, "authenticated");
 		} else {
 			// unauthenticated user rate limit 150 request an hour base on IP
@@ -346,7 +346,7 @@ public class TwitterManager {
 				.setApplicationOnlyAuthEnabled(true)
 				.setUseSSL(true)
 				.build();
-			asyncTwitter = new TwitterFactory(unauthenticatedConf).getInstance();
+			asyncTwitter = new AsyncTwitterFactory(unauthenticatedConf).getInstance();
 			try {
 				asyncTwitter.getOAuth2Token();
 			} catch (Exception e) {
@@ -355,84 +355,90 @@ public class TwitterManager {
 			Log.e(TAG, "unauthenticated");
 		}
 		
-//		asyncTwitter.addListener(listener);
+		asyncTwitter.addListener(listener);
 		// First param of Paging() is the page number, second is the number per
 		// page (this is capped around 200 I think.
 		Paging paging = new Paging(1, TWEET_COUNT);
+		asyncTwitter.getUserTimeline(username, paging);
 		
-		try {
-//			asyncTwitter.getAccountSettings();
-			ResponseList<Status> statuses = asyncTwitter.getUserTimeline(username, paging);
-			Log.e(TAG, "gotUserTimeline:" + username);
-			notifySucribers(Event.TWITTER_TIMELINE_RECEIVED, statuses);
-        } catch (TwitterException e) {
-        	Log.e("Your credentials do not allow access to this resource", e.getErrorMessage());
-			Log.printStackTrace(e);
-			notifySucribers(Event.TWITTER_TIMELINE_ERROR, e.getMessage());
-        } catch (Exception e) {
-			Log.printStackTrace(e);
-		}
+//		try {
+////			asyncTwitter.getAccountSettings();
+//			ResponseList<Status> statuses = asyncTwitter.getUserTimeline(username, paging);
+//			Log.e(TAG, "gotUserTimeline:" + username);
+//			notifySucribers(Event.TWITTER_TIMELINE_RECEIVED, statuses);
+//        } catch (TwitterException e) {
+//        	Log.e("Your credentials do not allow access to this resource", e.getErrorMessage());
+//			Log.printStackTrace(e);
+//			notifySucribers(Event.TWITTER_TIMELINE_ERROR, e.getMessage());
+//        } catch (Exception e) {
+//			Log.printStackTrace(e);
+//		}
 
 	}
 
 	public void getPublicUserListTimeline(final String username, int listId) {
 
-		Twitter asyncTwitter = null;
+		AsyncTwitter asyncTwitter = null;
 
-//		TwitterListener listener = new TwitterAdapter() {
-//
-//			@Override
-//			public void gotUserListStatuses(ResponseList<Status> statuses) {
-//				Log.e(TAG, "gotUserListStatuses:" + username);
-//				notifySucribers(Event.TWITTER_TIMELINE_RECEIVED, statuses);
-//			}
-//
-//			@Override
-//			public void onException(TwitterException ex, TwitterMethod method) {
-//				Log.e(TAG, "onException");
-//				// if (method == TwitterMethod.VERIFY_CREDENTIALS) {
-//				Log.printStackTrace(ex);
-//				// } else {
-//				// //throw new AssertionError("Should not happen");
-//				// Log.e(TAG, "Should not happen");
-//				// }
-//				notifySucribers(Event.TWITTER_TIMELINE_ERROR, ex.getMessage());
-//			}
-//
-//		};
+		TwitterListener listener = new TwitterAdapter() {
+
+			@Override
+			public void gotUserListStatuses(ResponseList<Status> statuses) {
+				Log.e(TAG, "gotUserListStatuses:" + username);
+				notifySucribers(Event.TWITTER_TIMELINE_RECEIVED, statuses);
+			}
+
+			@Override
+			public void onException(TwitterException ex, TwitterMethod method) {
+				Log.e(TAG, "onException");
+				// if (method == TwitterMethod.VERIFY_CREDENTIALS) {
+				Log.printStackTrace(ex);
+				// } else {
+				// //throw new AssertionError("Should not happen");
+				// Log.e(TAG, "Should not happen");
+				// }
+				notifySucribers(Event.TWITTER_TIMELINE_ERROR, ex.getMessage());
+			}
+
+		};
 
 		if (getUser() != null && isAuthenticated(prefs)) {
 			// authanticated user rate limit 350 request an hour base on token
 
 			Configuration conf = getTweetConfiguration(prefs, true);
-			asyncTwitter = new TwitterFactory(conf).getInstance();
+			asyncTwitter = new AsyncTwitterFactory(conf).getInstance();
 			Log.e(TAG, "authenticated");
 		} else {
 			// Application-only authentication mode is rate limited to 180 requests per app per 15 minutes
 			// unauthenticated user rate limit 150 request an hour base on IP - OLD ONE
 			Configuration unauthenticatedConf = new ConfigurationBuilder().setIncludeEntitiesEnabled(true).build();
-			asyncTwitter = new TwitterFactory(unauthenticatedConf).getInstance();
+			asyncTwitter = new AsyncTwitterFactory(unauthenticatedConf).getInstance();
+			try {
+				asyncTwitter.getOAuth2Token();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			Log.e(TAG, "unauthenticated");
 		}
 
-//		asyncTwitter.addListener(listener);
+		asyncTwitter.addListener(listener);
 		// First param of Paging() is the page number, second is the number per
 		// page (this is capped around 200 I think.
 		Paging paging = new Paging(1, TWEET_COUNT);
-//		asyncTwitter.getUserListStatuses(listId, username, paging);
+		asyncTwitter.getUserListStatuses(listId, username, paging);
 		
-		try {
-//			asyncTwitter.getAccountSettings();
-			ResponseList<Status> statuses = asyncTwitter.getUserListStatuses(listId, username, paging);
-			Log.e(TAG, "gotUserListStatuses:" + username);
-			notifySucribers(Event.TWITTER_TIMELINE_RECEIVED, statuses);
-        } catch (TwitterException e) {
-        	Log.e("Your credentials do not allow access to this resource", e.getErrorMessage());
-			Log.printStackTrace(e);
-			notifySucribers(Event.TWITTER_TIMELINE_ERROR, e.getMessage());
-        } catch (Exception e) {
-			Log.printStackTrace(e);
-		}
+//		try {
+////			asyncTwitter.getAccountSettings();
+//			ResponseList<Status> statuses = asyncTwitter.getUserListStatuses(listId, username, paging);
+//			Log.e(TAG, "gotUserListStatuses:" + username);
+//			notifySucribers(Event.TWITTER_TIMELINE_RECEIVED, statuses);
+//        } catch (TwitterException e) {
+//        	Log.e("Your credentials do not allow access to this resource", e.getErrorMessage());
+//			Log.printStackTrace(e);
+//			notifySucribers(Event.TWITTER_TIMELINE_ERROR, e.getMessage());
+//        } catch (Exception e) {
+//			Log.printStackTrace(e);
+//		}
 
 	}
 	
