@@ -408,7 +408,8 @@ public class TwitterManager {
 			asyncTwitter = new TwitterFactory(conf).getInstance();
 			Log.e(TAG, "authenticated");
 		} else {
-			// unauthenticated user rate limit 150 request an hour base on IP
+			// Application-only authentication mode is rate limited to 180 requests per app per 15 minutes
+			// unauthenticated user rate limit 150 request an hour base on IP - OLD ONE
 			Configuration unauthenticatedConf = new ConfigurationBuilder().setIncludeEntitiesEnabled(true).build();
 			asyncTwitter = new TwitterFactory(unauthenticatedConf).getInstance();
 			Log.e(TAG, "unauthenticated");
