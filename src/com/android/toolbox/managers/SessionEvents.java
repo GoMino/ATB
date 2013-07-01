@@ -18,10 +18,10 @@ package com.android.toolbox.managers;
 
 import java.util.LinkedList;
 
-public class CustomSessionEvents {
+public abstract class SessionEvents {
 
-    private static LinkedList<AuthListener> mAuthListeners = new LinkedList<AuthListener>();
-    private static LinkedList<LogoutListener> mLogoutListeners = new LinkedList<LogoutListener>();
+    protected LinkedList<AuthListener> mAuthListeners = new LinkedList<AuthListener>();
+    protected LinkedList<LogoutListener> mLogoutListeners = new LinkedList<LogoutListener>();
 
     /**
      * Associate the given listener with this Facebook object. The listener's
@@ -31,7 +31,7 @@ public class CustomSessionEvents {
      *            The callback object for notifying the application when auth
      *            events happen.
      */
-    public static void addAuthListener(AuthListener listener) {
+    public void addAuthListener(AuthListener listener) {
         mAuthListeners.add(listener);
     }
 
@@ -43,7 +43,7 @@ public class CustomSessionEvents {
      *            The callback object for notifying the application when auth
      *            events happen.
      */
-    public static void removeAuthListener(AuthListener listener) {
+    public void removeAuthListener(AuthListener listener) {
         mAuthListeners.remove(listener);
     }
 
@@ -55,7 +55,7 @@ public class CustomSessionEvents {
      *            The callback object for notifying the application when log out
      *            starts and finishes.
      */
-    public static void addLogoutListener(LogoutListener listener) {
+    public void addLogoutListener(LogoutListener listener) {
         mLogoutListeners.add(listener);
     }
 
@@ -67,41 +67,35 @@ public class CustomSessionEvents {
      *            The callback object for notifying the application when log out
      *            starts and finishes.
      */
-    public static void removeLogoutListener(LogoutListener listener) {
+    public void removeLogoutListener(LogoutListener listener) {
         mLogoutListeners.remove(listener);
     }
 
-    public static void onLoginSuccess() {
+    public void onLoginSuccess() {
         for (AuthListener listener : mAuthListeners) {
             listener.onAuthSucceed();
         }
     }
 
-    public static void onLoginError(String error) {
+    public void onLoginError(String error) {
         for (AuthListener listener : mAuthListeners) {
             listener.onAuthFail(error);
         }
     }
-    
-    public static void onContinuumReceived(boolean success) {
-        for (AuthListener listener : mAuthListeners) {
-            listener.onContinuumReceived(success);
-        }
-    }
 
-    public static void onLogoutBegin() {
+    public void onLogoutBegin() {
         for (LogoutListener l : mLogoutListeners) {
             l.onLogoutBegin();
         }
     }
 
-    public static void onLogoutFinish() {
+    public void onLogoutFinish() {
         for (LogoutListener l : mLogoutListeners) {
             l.onLogoutFinish();
         }
     }
     
-    public static void onLogoutError(String error) {
+    public void onLogoutError(String error) {
         for (LogoutListener l : mLogoutListeners) {
             l.onLogoutError(error);
         }
@@ -127,10 +121,10 @@ public class CustomSessionEvents {
          */
         public void onAuthFail(String error);
         
-        /**
-         * Called when a auth flow completes successfully till continuum purchase has been retrieved
-         */
-        public void onContinuumReceived(boolean success);
+//        /**
+//         * Called when a auth flow completes successfully till continuum purchase has been retrieved
+//         */
+//        public void onContinuumReceived(boolean success);
     }
 
     /**

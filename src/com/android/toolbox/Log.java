@@ -27,20 +27,25 @@ public class Log {
 
 		void d(String logTag, String logText);
 		void d(String logText);
+		void d();
 
 		void e(String logTag, String logText);
 		void e(String logTag, String logText, Throwable exception);
 		void e(String logText);
+		void e();
 
 		void w(String logTag, String logText);
 		void w(String logTag, String logText, Throwable exception);
 		void w(String logText);
-
+		void w();
+		
 		void v(String logTag, String logText);
 		void v(String logText);
+		void v();
 
 		void i(String logTag, String logText);
 		void i(String logText);
+		void i();
 
 	}
 
@@ -96,7 +101,7 @@ public class Log {
 			public void w(String logTag, String logText, Throwable exception) {
 				if (isLogEnabled){
 					logText = addMethodNameAndLineNumberIfEnable(logText);
-					android.util.Log.e(logTag, logText, exception);
+					android.util.Log.w(logTag, logText, exception);
 				}
 			}
 			
@@ -104,6 +109,14 @@ public class Log {
 				if (isLogEnabled){
 					StackTraceElement caller = getStackTraceElement(3);
 					logText = getCurrentMethod(caller)+" "+logText; 
+					android.util.Log.w(getCurrentClassName(caller), logText);
+				}
+			}
+			
+			public void w() {
+				if (isLogEnabled){
+					StackTraceElement caller = getStackTraceElement(3);
+					String logText = getCurrentMethod(caller); 
 					android.util.Log.w(getCurrentClassName(caller), logText);
 				}
 			}
@@ -123,6 +136,14 @@ public class Log {
 					android.util.Log.v(getCurrentClassName(caller), logText);
 				}
 			}
+			
+			public void v() {
+				if (isLogEnabled){
+					StackTraceElement caller = getStackTraceElement(3);
+					String logText = getCurrentMethod(caller); 
+					android.util.Log.v(getCurrentClassName(caller), logText);
+				}
+			}
 
 			@Override
 			public void i(String logTag, String logText) {
@@ -136,6 +157,14 @@ public class Log {
 				if (isLogEnabled){
 					StackTraceElement caller = getStackTraceElement(3);
 					logText = getCurrentMethod(caller)+" "+logText; 
+					android.util.Log.i(getCurrentClassName(caller), logText);
+				}
+			}
+			
+			public void i() {
+				if (isLogEnabled){
+					StackTraceElement caller = getStackTraceElement(3);
+					String logText = getCurrentMethod(caller); 
 					android.util.Log.i(getCurrentClassName(caller), logText);
 				}
 			}
@@ -164,6 +193,15 @@ public class Log {
 				}
 			}
 			
+			
+			public void e() {
+				if (isLogEnabled){
+					StackTraceElement caller = getStackTraceElement(3);
+					String logText = getCurrentMethod(caller); 
+					android.util.Log.e(getCurrentClassName(caller), logText);
+				}
+			}
+			
 			@Override
 			public void d(String logTag, String logText) {
 				if (isLogEnabled){
@@ -176,6 +214,15 @@ public class Log {
 				if (isLogEnabled){
 					StackTraceElement caller = getStackTraceElement(3);
 					logText = getCurrentMethod(caller)+" "+logText; 
+					android.util.Log.d(getCurrentClassName(caller), logText);
+				}
+			}
+			
+			
+			public void d() {
+				if (isLogEnabled){
+					StackTraceElement caller = getStackTraceElement(3);
+					String logText = getCurrentMethod(caller); 
 					android.util.Log.d(getCurrentClassName(caller), logText);
 				}
 			}
@@ -202,6 +249,12 @@ public class Log {
 			getInstance().d(logText);
 		}
 	}
+	
+	public static void d() {
+		if (isLogEnabled){
+			getInstance().d();
+		}
+	}
 
 	public static void e(String logTag, String logText) {
 		if (isLogEnabled){
@@ -218,6 +271,12 @@ public class Log {
 	public static void e(String logText) {
 		if (isLogEnabled){
 			getInstance().e(logText);
+		}
+	}
+	
+	public static void e() {
+		if (isLogEnabled){
+			getInstance().e();
 		}
 	}
 
@@ -238,6 +297,12 @@ public class Log {
 			getInstance().w(logText);
 		}
 	}
+	
+	public static void w() {
+		if (isLogEnabled){
+			getInstance().w();
+		}
+	}
 
 	public static void v(String logTag, String logText) {
 		if (isLogEnabled){
@@ -250,6 +315,12 @@ public class Log {
 			getInstance().v(logText);
 		}
 	}
+	
+	public static void v() {
+		if (isLogEnabled){
+			getInstance().v();
+		}
+	}
 
 	public static void i(String logTag, String logText) {
 		if (isLogEnabled){
@@ -260,6 +331,12 @@ public class Log {
 	public static void i(String logText) {
 		if (isLogEnabled){
 			getInstance().i(logText);
+		}
+	}
+	
+	public static void i() {
+		if (isLogEnabled){
+			getInstance().i();
 		}
 	}
 	

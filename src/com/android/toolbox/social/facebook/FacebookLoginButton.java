@@ -19,14 +19,17 @@ package com.android.toolbox.social.facebook;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.media.FaceDetector.Face;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
 
 import com.android.toolbox.R;
-import com.android.toolbox.social.facebook.SessionEvents.AuthListener;
-import com.android.toolbox.social.facebook.SessionEvents.LogoutListener;
+import com.android.toolbox.managers.InstanceFactory;
+import com.android.toolbox.managers.SessionEvents;
+import com.android.toolbox.managers.SessionEvents.AuthListener;
+import com.android.toolbox.managers.SessionEvents.LogoutListener;
 import com.facebook.android.Facebook;
 
 public class FacebookLoginButton extends Button {
@@ -34,6 +37,7 @@ public class FacebookLoginButton extends Button {
     private Facebook mFb;
     private Handler mHandler;
     private SessionListener mSessionListener = new SessionListener();
+    private SessionEvents mSessionEvents;
     private String[] mPermissions;
     private Activity mActivity;
     private int mActivityCode;
@@ -71,8 +75,9 @@ public class FacebookLoginButton extends Button {
     	setText(fb.isSessionValid() ? mLogoutString: mLoginString);
         drawableStateChanged();
 
-        SessionEvents.addAuthListener(mSessionListener);
-        SessionEvents.addLogoutListener(mSessionListener);
+		mSessionEvents = InstanceFactory.getFactory().getInstance(FacebookSessionEvents.class).getThing();
+		mSessionEvents.addAuthListener(mSessionListener);
+		mSessionEvents.addLogoutListener(mSessionListener);
         setOnClickListener(new ButtonOnClickListener());
     }
 
@@ -113,6 +118,12 @@ public class FacebookLoginButton extends Button {
 //            setImageResource(R.drawable.login_button);
         	setText(mLoginString);
         }
+
+		@Override
+		public void onLogoutError(String error) {
+			// TODO Auto-generated method stub
+			
+		}
     }
 
 }

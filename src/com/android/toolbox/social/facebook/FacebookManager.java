@@ -18,15 +18,17 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 
 import com.android.toolbox.Log;
+import com.android.toolbox.managers.InstanceFactory;
+import com.android.toolbox.managers.SessionEvents;
+import com.android.toolbox.managers.InstanceFactory.ThingHolder;
+import com.android.toolbox.managers.SessionEvents.AuthListener;
+import com.android.toolbox.managers.SessionEvents.LogoutListener;
 import com.android.toolbox.social.facebook.FacebookUser.WallPost;
-import com.android.toolbox.social.facebook.SessionEvents.AuthListener;
-import com.android.toolbox.social.facebook.SessionEvents.LogoutListener;
 import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
@@ -44,6 +46,7 @@ public class FacebookManager {
 	private Handler mHandler;
 	private Activity activity;
 	private SessionListener mSessionListener;
+	private SessionEvents mSessionEvent;
 	private FacebookUser mFacebookLoggedUser;
 	private Map<String, FacebookUser> mFacebookFriends;
 	private FacebookUser mFacebookEuro2012User;
@@ -58,8 +61,9 @@ public class FacebookManager {
 		this.mGraphAPIListeners = new HashSet<FacebookManager.FacebookGraphAPIRequestListener>();
 		this.mSessionListener = new SessionListener();
 
-		SessionEvents.addAuthListener(mSessionListener);
-		SessionEvents.addLogoutListener(mSessionListener);
+		mSessionEvent = InstanceFactory.getFactory().getInstance(FacebookSessionEvents.class).getThing();
+		mSessionEvent.addAuthListener(mSessionListener);
+		mSessionEvent.addLogoutListener(mSessionListener);
 
 		this.mFacebookEuro2012User = new FacebookUser();
 		this.permissions = permissions;
@@ -89,7 +93,7 @@ public class FacebookManager {
 	}
 
 	public void logout() {
-		SessionEvents.onLogoutBegin();
+		mSessionEvent.onLogoutBegin();
 		AsyncFacebookRunner asyncRunner = new AsyncFacebookRunner(this.facebook);
 		asyncRunner.logout(this.context, new LogoutRequestListener());
 	}
@@ -236,7 +240,7 @@ public class FacebookManager {
 
 				}
 			};
-			SessionEvents.addAuthListener(listener);
+			mSessionEvent.addAuthListener(listener);
 
 			login();
 		}
@@ -272,7 +276,7 @@ public class FacebookManager {
 
 				}
 			};
-			SessionEvents.addAuthListener(listener);
+			mSessionEvent.addAuthListener(listener);
 
 			login();
 
@@ -305,7 +309,7 @@ public class FacebookManager {
 
 				}
 			};
-			SessionEvents.addAuthListener(listener);
+			mSessionEvent.addAuthListener(listener);
 
 			login();
 		}
@@ -342,7 +346,7 @@ public class FacebookManager {
 
 				}
 			};
-			SessionEvents.addAuthListener(listener);
+			mSessionEvent.addAuthListener(listener);
 
 			login();
 		}
@@ -412,7 +416,7 @@ public class FacebookManager {
 
 				}
 			};
-			SessionEvents.addAuthListener(listener);
+			mSessionEvent.addAuthListener(listener);
 
 			login();
 		}
@@ -477,19 +481,19 @@ public class FacebookManager {
 
 	private final class LoginDialogListener implements DialogListener {
 		public void onComplete(Bundle values) {
-			SessionEvents.onLoginSuccess();
+			mSessionEvent.onLoginSuccess();
 		}
 
 		public void onFacebookError(FacebookError error) {
-			SessionEvents.onLoginError(error.getMessage());
+			mSessionEvent.onLoginError(error.getMessage());
 		}
 
 		public void onError(DialogError error) {
-			SessionEvents.onLoginError(error.getMessage());
+			mSessionEvent.onLoginError(error.getMessage());
 		}
 
 		public void onCancel() {
-			SessionEvents.onLoginError("Action Canceled");
+			mSessionEvent.onLoginError("Action Canceled");
 		}
 	}
 
@@ -499,7 +503,7 @@ public class FacebookManager {
 			// not the background thread
 			mHandler.post(new Runnable() {
 				public void run() {
-					SessionEvents.onLogoutFinish();
+					mSessionEvent.onLogoutFinish();
 					gotFriendsCheckin = false; //so that the list of friends will be cleared when we change session
 					Log.e(TAG, "friends checkins deleted");
 				}
@@ -526,6 +530,12 @@ public class FacebookManager {
 			SessionStore.clear(context);
 			mFacebookLoggedUser = null;
 			notifySucribers(Event.FACEBOOK_LOGGING_OUT_END);
+		}
+
+		@Override
+		public void onLogoutError(String error) {
+			// TODO Auto-generated method stub
+			
 		}
 	}
 
