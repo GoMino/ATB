@@ -41,4 +41,8 @@ public class DialogHelper {
 		}
 	}
 	
+	
+	public void dismissProgressDialog(){
+		dismissDialogIfPossiblebyTag(ProgressDialogFragment.class.getSimpleName());
+	}
 }
