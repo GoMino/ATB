@@ -13,6 +13,7 @@ import java.io.Serializable;
 import java.io.StreamCorruptedException;
 
 import com.android.toolbox.Log.LogInterface;
+import com.android.toolbox.utils.DBHelper;
 
 import android.app.Activity;
 import android.content.Context;
