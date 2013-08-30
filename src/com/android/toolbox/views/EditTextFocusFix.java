@@ -18,7 +18,7 @@ import com.android.toolbox.ToolBox;
 /**
  * @author gomino (amine.bezzarga@labgency.com)
  */
-public class EditTextFocusFix extends EditText implements OnFocusChangeListener, OnClickListener {
+public class EditTextFocusFix extends AutoCompleteTextView implements OnFocusChangeListener, OnClickListener {
 
 	private String TAG = EditTextFocusFix.class.getSimpleName();
 	private boolean isFocusable = false;
