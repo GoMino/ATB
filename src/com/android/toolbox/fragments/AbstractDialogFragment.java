@@ -221,7 +221,7 @@ public abstract class AbstractDialogFragment extends DialogFragment implements O
 	
 	@Override
 	public void onCancel(DialogInterface dialog) {
-		if(mDismissListener!=null) mDismissListener.onDialogCancelled();
+		if(mDismissListener!=null) mDismissListener.onDialogCancelled(getTag());
 		super.onCancel(dialog);
 	}
 	
@@ -231,7 +231,7 @@ public abstract class AbstractDialogFragment extends DialogFragment implements O
 		if(getActivity()!=null && getView()!=null){
 			getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		}
-		if(mDismissListener!=null) mDismissListener.onDialogDismiss();
+		if(mDismissListener!=null) mDismissListener.onDialogDismiss(getTag());
 		super.onDismiss(dialog);
 	}
 	

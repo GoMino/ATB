@@ -21,8 +21,7 @@ public abstract class BaseDefaultHandler extends DefaultHandler{
 	 * We use StringBuilder for better performance, because it's mutable
 	 */
 	protected StringBuilder mSb = new StringBuilder();
-	protected boolean isLogEnabled = false;
-	
+	protected boolean mIsLogEnabled = false;
 	
 	public BaseDefaultHandler() {
 		super();
@@ -32,22 +31,40 @@ public abstract class BaseDefaultHandler extends DefaultHandler{
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 //		mSb.delete(0, mSb.length());
 		mSb.setLength(0);
+		
 		localName = (StringUtility.notEmpty(localName)) ? localName : qName;
-		if(isLogEnabled)
-			Log.e(TAG, "startElement\t: " + localName);
+		if(mIsLogEnabled){
+			StringBuilder sb  = new StringBuilder();
+			if(attributes!=null){
+				
+				for(int i=0; i<attributes.getLength();i++){
+					sb.append(" " + attributes.getLocalName(i) + "=" + attributes.getValue(i));
+				}
+			}
+			Log.v(TAG, localName + " " + sb.toString());
+		}
 		
 	}
 
 	public void characters(char[] ch, int start, int length) throws SAXException {
 		mSb.append(ch, start, length);
-		if(isLogEnabled)
-			Log.e(TAG, "characters\t\t: " + mSb.toString().trim());
+		if(mIsLogEnabled && mSb.toString().trim().length()>0)
+			Log.v(TAG, mSb.toString().trim());
+
 	}
 
 	public void endElement(String uri, String localName, String qName)throws SAXException {
 		localName = (StringUtility.notEmpty(localName)) ? localName : qName;
-		if(isLogEnabled)
-			Log.e(TAG, "endElement\t\t: " + localName);
+		if(mIsLogEnabled)
+			Log.v(TAG, localName);
+		
 	}
 	
+	public boolean isLogEnabled(){
+		return mIsLogEnabled;
+	}
+	
+	public void setIsLogEnabled(boolean b){
+		mIsLogEnabled = b;
+	}
 }
