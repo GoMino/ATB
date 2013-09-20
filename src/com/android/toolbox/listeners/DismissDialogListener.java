@@ -5,7 +5,7 @@ package com.android.toolbox.listeners;
  */
 public interface DismissDialogListener{
 
-	void onDialogDismiss();
-	void onDialogCancelled();
+	void onDialogDismiss(String tag);
+	void onDialogCancelled(String tag);
 
 }

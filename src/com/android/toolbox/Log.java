@@ -357,4 +357,19 @@ public class Log {
 			System.err.println(message);
 		}
 	}
+	
+	public static void logVeryLongString(String sb){
+		if (sb.length() > 4000) {
+		    Log.d("sb.length = " + sb.length());
+		    int chunkCount = sb.length() / 4000;     // integer division
+		    for (int i = 0; i <= chunkCount; i++) {
+		        int max = 4000 * (i + 1);
+		        if (max >= sb.length()) {
+		            Log.d("chunk " + i + " of " + chunkCount + ":" + sb.substring(4000 * i));
+		        } else {
+		            Log.d("chunk " + i + " of " + chunkCount + ":" + sb.substring(4000 * i, max));
+		        }
+		    }
+		}
+	}
 }
