@@ -22,7 +22,7 @@ public class DialogHelper {
 	}
 	
 	public void popupProgressDialog(String message){
-		Log.d();
+		Log.d("popup progress dialog");
 		if (mFragmentManager.findFragmentByTag(ProgressDialogFragment.class.getSimpleName()) != null){
 			return;
 		}
@@ -32,8 +32,9 @@ public class DialogHelper {
 	}
 	
 	public void dismissDialogIfPossiblebyTag(String tag){
-		Log.d("" + tag);
+		Log.d("dismiss dialog if possible, by tag : " + tag);
 		try{
+			mFragmentManager.executePendingTransactions();
 			if (mFragmentManager.findFragmentByTag(tag) != null)
 				((DialogFragment) mFragmentManager.findFragmentByTag(tag)).dismissAllowingStateLoss();
 		}catch(Exception e){

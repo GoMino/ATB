@@ -38,6 +38,11 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
     
+    <style name="FullScreenCustomDialogTheme" parent="@android:style/Theme.Translucent.NoTitleBar.Fullscreen">
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+    
+    
     <style name="Animations" />
 
 	<!-- PopDownMenu -->
