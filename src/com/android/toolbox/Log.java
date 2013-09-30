@@ -71,7 +71,11 @@ public class Log {
 	}
 	
 	public static String getCurrentClassName(StackTraceElement caller){
-		return caller.getFileName().replace(".java", "");
+		String name = caller.getFileName();
+		if(name != null){
+			name += name.replace(".java", "");
+		}
+		return name;
 	}
 
 	private static LogInterface instance;
