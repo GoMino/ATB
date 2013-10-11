@@ -16,13 +16,13 @@ public class DialogHelper {
 		mFragmentManager = fm;
 		mDefaultLoadingString = defaultLoadingString;
 	}
-	
+
 	public void popupProgressDialog(){
 		popupProgressDialog(mDefaultLoadingString);
 	}
-	
+
 	public void popupProgressDialog(String message){
-		Log.d();
+		Log.d("popup progress dialog");
 		if (mFragmentManager.findFragmentByTag(ProgressDialogFragment.class.getSimpleName()) != null){
 			return;
 		}
@@ -30,9 +30,14 @@ public class DialogHelper {
 		progressFragment.setCancelable(false);
 		progressFragment.show(mFragmentManager, ProgressDialogFragment.class.getSimpleName());
 	}
-	
+
 	public void dismissDialogIfPossiblebyTag(String tag){
-		Log.d("" + tag);
+		Log.d("dismiss dialog if possible, by tag : " + tag);
+		try{
+			mFragmentManager.executePendingTransactions();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 		try{
 			if (mFragmentManager.findFragmentByTag(tag) != null)
 				((DialogFragment) mFragmentManager.findFragmentByTag(tag)).dismissAllowingStateLoss();
@@ -40,8 +45,8 @@ public class DialogHelper {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
+
 	public void dismissProgressDialog(){
 		dismissDialogIfPossiblebyTag(ProgressDialogFragment.class.getSimpleName());
 	}

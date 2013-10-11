@@ -88,11 +88,17 @@ public class EditTextFocusFix extends AutoCompleteTextView implements OnFocusCha
 	public void onFocusChange(View v, boolean hasFocus) {
 		Log.v(TAG, "onFocusChange : " + hasFocus + " isFocusable : " + isFocusable);
 		if(isFocusable){
-
 				if (hasFocus)
 				{
-					//open keyboard
-					((InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE)).showSoftInput(this, InputMethodManager.SHOW_FORCED);
+					this.post(new Runnable() {
+	                    @Override
+	                    public void run() {
+	                    	//open keyboard
+	    					((InputMethodManager) getContext().
+	    							getSystemService(Context.INPUT_METHOD_SERVICE)).
+	    								showSoftInput(EditTextFocusFix.this, InputMethodManager.SHOW_FORCED);
+	                    }
+	                });
 					setCursorVisible(true);
 					setFocusable(true);
 					setFocusableInTouchMode(true);
