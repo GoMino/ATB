@@ -1,6 +1,8 @@
 package com.android.toolbox.utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import android.support.v4.app.Fragment;
@@ -32,6 +34,10 @@ public class TagHolders<K extends View, T> {
 	public K getHolderByFragment( int fragHashCode ) {
 		Log.d("tagHash:" + fragHashCode); 
 		return mHolderByTagHash.get( fragHashCode );
+	}
+	
+	public Iterable<K> getTagHolders() {
+		return mHolderByTagHash.values();
 	}
 	
 	public static class MetaTag<J>{
