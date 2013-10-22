@@ -3,32 +3,34 @@ package com.android.toolbox.views;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.android.toolbox.Log;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Checkable;
-import android.widget.RelativeLayout;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
-public class CheckableRelativeLayout extends RelativeLayout implements Checkable {
-
-	private static final String TAG = "CheckableRelativeLayout";
+public class CheckableFrameLayout extends FrameLayout implements Checkable {
+	private static final String TAG = "CheckableFrameLayout";
 	private boolean isChecked;
 	private List<Checkable> checkableViews;
+	private boolean mBlocked = false;
 	private boolean mBlockStateChanged	= false;
-	private boolean mLayoutBlocked = false;
 	
-	public CheckableRelativeLayout(Context context) {
+	public CheckableFrameLayout(Context context) {
 		super(context);
 		initialise(null);
 	}
 
-	public CheckableRelativeLayout(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
-		initialise(attrs);
-	}
+//	public CheckableLinearLayout(Context context, AttributeSet attrs, int defStyle) {
+//		super(context, attrs, defStyle);
+//		initialise(attrs);
+//	}
 
-	public CheckableRelativeLayout(Context context, AttributeSet attrs) {
+	public CheckableFrameLayout(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		initialise(attrs);
 	}
@@ -48,9 +50,7 @@ public class CheckableRelativeLayout extends RelativeLayout implements Checkable
 		
 		for (Checkable c : checkableViews) {
 			c.setChecked(isChecked);
-//			Log.d(TAG,"view at position "+ checkableViews.indexOf(c) + " is checked?" + isChecked);
 		}
-//		Log.e(TAG, "set checked, we have " + checkableViews.size() + " checkable children");
 		this.isChecked = isChecked;
 		refreshDrawableState();
 	}
@@ -59,31 +59,32 @@ public class CheckableRelativeLayout extends RelativeLayout implements Checkable
 	 * @see android.widget.Checkable#toggle()
 	 */
 	public void toggle() {
+		Log.i(TAG,"toggle");
 		this.isChecked = !this.isChecked;
 		for (Checkable c : checkableViews) {
 			c.toggle();
 		}
 		refreshDrawableState();
 	}
-
-//	@Override
-//	protected void drawableStateChanged() {
-//		super.drawableStateChanged();
-//	}
-//	
-    protected int[] onCreateDrawableState(int extraSpace) {
-    	if (mBlockStateChanged && !isPressed()){
-    		final int[] drawableState = new int[extraSpace];
-    		return drawableState;
-    	}else{
-	    	final int[] drawableState = super.onCreateDrawableState(extraSpace + 1);
-	    	if (isChecked()) {
-	    		 mergeDrawableStates(drawableState, new int[]{android.R.attr.state_checked});
-	    	}
-	    	return drawableState;
-    	}
-    }
-
+	
+	public void setBlockStateChange(boolean block){
+		mBlockStateChanged = block;
+		refreshDrawableState();
+	}
+	
+	@Override
+	protected int[] onCreateDrawableState(int extraSpace) {
+		if (mBlockStateChanged && !isPressed()){
+			final int[] drawableState = new int[extraSpace];
+			return drawableState;
+		}else{
+			final int[] drawableState = super.onCreateDrawableState(extraSpace + 1);
+			if (isChecked()) {
+				mergeDrawableStates(drawableState, new int[]{android.R.attr.state_checked});
+			}
+			return drawableState;
+		}
+	}
 
 	@Override
 	protected void onFinishInflate() {
@@ -94,12 +95,6 @@ public class CheckableRelativeLayout extends RelativeLayout implements Checkable
 			findCheckableChildren(this.getChildAt(i));
 		}
 	}
-	
-//	public void setBlockStateChange(boolean block){
-//		mBlockStateChanged = block;
-//		refreshDrawableState();
-//	}
-	
 
 	/**
 	 * Read the custom XML attributes
@@ -113,7 +108,7 @@ public class CheckableRelativeLayout extends RelativeLayout implements Checkable
 	 * Add to our checkable list all the children of the view that implement the
 	 * interface Checkable
 	 */
-	protected void findCheckableChildren(View v) {
+	private void findCheckableChildren(View v) {
 		if (v instanceof Checkable && v.isDuplicateParentStateEnabled()) {
 			this.checkableViews.add((Checkable) v);
 		}
@@ -129,13 +124,13 @@ public class CheckableRelativeLayout extends RelativeLayout implements Checkable
 		}
 	}
 	
-	public void setBlockRequestLayout(boolean blocked){
-		mLayoutBlocked = blocked;
-	}
-
 	@Override
 	public void requestLayout() {
-		if (!mLayoutBlocked)
+		if (!mBlocked)
 			super.requestLayout();
+	}
+
+	public void setBlockRequestLayout(boolean blocked){
+		mBlocked = blocked;
 	}
 }

@@ -1,7 +1,10 @@
 package com.android.toolbox.views;
 
+import com.android.toolbox.Log;
+
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 
 /**
  * Special version of ImageView which allow enlarge width of image if android:adjustViewBounds is true.
@@ -172,11 +175,12 @@ public class EnlargeableImageView extends android.widget.ImageView {
 
 					// Try adjusting height to be proportional to width
 					if (!done && resizeHeight) {
-						int newHeight = (int) ((widthSize - pleft - pright)
-								/ desiredAspect) + ptop + pbottom;
-						//						Log.e(TAG, "resizeHeight  | old height  = " + heightSize + " new height  = " + newHeight + " actualAspect =" + actualAspect +" desiredRatio =" + desiredAspect + " width =" + widthSize);
+						int newHeight = (int) ((widthSize - pleft - pright) / desiredAspect) + ptop + pbottom;
+//						Log.e(TAG, "resizeHeight  | old height  = " + heightSize + " new height  = " + newHeight + " actualAspect =" + actualAspect +" desiredRatio =" + desiredAspect + " width =" + widthSize);
 						//if (newHeight <= heightSize) {
 						heightSize = newHeight;
+//						requestLayout();
+//						((View)getParent()).invalidate();
 						//} 
 					}
 				}
