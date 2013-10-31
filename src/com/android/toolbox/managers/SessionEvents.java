@@ -18,7 +18,7 @@ package com.android.toolbox.managers;
 
 import java.util.LinkedList;
 
-public abstract class SessionEvents {
+public class SessionEvents {
 
     protected LinkedList<AuthListener> mAuthListeners = new LinkedList<AuthListener>();
     protected LinkedList<LogoutListener> mLogoutListeners = new LinkedList<LogoutListener>();
