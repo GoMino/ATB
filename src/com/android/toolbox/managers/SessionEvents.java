@@ -17,11 +17,12 @@
 package com.android.toolbox.managers;
 
 import java.util.LinkedList;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class SessionEvents {
 
-    protected LinkedList<AuthListener> mAuthListeners = new LinkedList<AuthListener>();
-    protected LinkedList<LogoutListener> mLogoutListeners = new LinkedList<LogoutListener>();
+    protected ConcurrentLinkedQueue<AuthListener> mAuthListeners = new ConcurrentLinkedQueue<AuthListener>();
+    protected ConcurrentLinkedQueue<LogoutListener> mLogoutListeners = new ConcurrentLinkedQueue<LogoutListener>();
 
     /**
      * Associate the given listener with this Facebook object. The listener's
@@ -73,31 +74,41 @@ public class SessionEvents {
 
     public void onLoginSuccess() {
         for (AuthListener listener : mAuthListeners) {
-            listener.onAuthSucceed();
+        	if(listener!=null){
+        		listener.onAuthSucceed();
+        	}
         }
     }
 
     public void onLoginError(String error) {
         for (AuthListener listener : mAuthListeners) {
-            listener.onAuthFail(error);
+        	if(listener!=null){
+        		listener.onAuthFail(error);
+        	}
         }
     }
 
     public void onLogoutBegin() {
         for (LogoutListener l : mLogoutListeners) {
-            l.onLogoutBegin();
+        	if(l!=null){
+        		l.onLogoutBegin();
+        	}
         }
     }
 
     public void onLogoutFinish() {
         for (LogoutListener l : mLogoutListeners) {
-            l.onLogoutFinish();
+        	if(l!=null){
+        		l.onLogoutFinish();
+        	}
         }
     }
     
     public void onLogoutError(String error) {
         for (LogoutListener l : mLogoutListeners) {
-            l.onLogoutError(error);
+        	if(l!=null){
+        		l.onLogoutError(error);
+        	}
         }
     }
 
@@ -154,4 +165,9 @@ public class SessionEvents {
         public void onLogoutError(String error);
     }
 
+    
+    public void clear(){
+    	mAuthListeners.clear();
+    	mLogoutListeners.clear();
+    }
 }
