@@ -88,6 +88,21 @@ public class CustomFragmentManager {
 		}
 		return false;
 	}
+	
+	public boolean isFragmentAlreadyInStackByHashCode(Fragment fragment){
+		for(int i=0; i<mFragmentManager.getBackStackEntryCount(); i++){
+			BackStackEntry stackedEntry = mFragmentManager.getBackStackEntryAt(i);
+			Fragment stackedFragment = mFragmentManager.findFragmentByTag(stackedEntry.getName());
+			if(stackedFragment!=null){
+				Log.v(TAG, "[isFragmentAlreadyInStack] has fragment from backstack: " + stackedFragment.getClass().getSimpleName() + "(" +stackedFragment.getId()+") the same hashcode " + fragment.getClass().getSimpleName() + "("+fragment.getId()+")");
+				if (stackedFragment.hashCode() == fragment.hashCode()){
+					Log.v(TAG, "[isFragmentAlreadyInStack] "+fragment.getClass().getSimpleName() + " already stacked");
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
 	
 	public int getFragmentPositionInStack(Fragment fragment, final boolean fromEnd){

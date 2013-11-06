@@ -113,6 +113,18 @@ public class ToolBox {
 		return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) != Configuration.SCREENLAYOUT_SIZE_XLARGE;
 	}
 	
+	public static long getSmallestWidthDp(Context context){
+		Configuration config = context.getResources().getConfiguration();
+		//Independant from device density
+		//480 5" phone
+		//600 7" tablet
+		//720 10" tablet
+		if (Build.VERSION.SDK_INT>=13) {
+			return config.smallestScreenWidthDp;
+		} 
+		return -1;
+	}
+	
 	public static boolean is7inchTablet(Context context){
 		
 		 Configuration config = context.getResources().getConfiguration();
@@ -122,11 +134,11 @@ public class ToolBox {
 		//720 10" tablet
 		int screenWidth = getScreenWidth(context);
 		Log.v(TAG, "[is7inchTablet] screenwidth:"+screenWidth + ((Build.VERSION.SDK_INT>=13)?" smallestScreenWidthDp:"+config.smallestScreenWidthDp:""));
-	     if (Build.VERSION.SDK_INT>=13 && config.smallestScreenWidthDp >= 600) {
-	    	 int naturalOrientation = getDefaultOrientation(context);
-				if(naturalOrientation==ActivityInfo.SCREEN_ORIENTATION_PORTRAIT || naturalOrientation==ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT){
-					return true;
-				}
+	    if (getSmallestWidthDp(context) >= 600) {
+	    	int naturalOrientation = getDefaultOrientation(context);
+	    	if(naturalOrientation==ActivityInfo.SCREEN_ORIENTATION_PORTRAIT || naturalOrientation==ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT){
+	    		return true;
+	    	}
 	     } 
 //		else if(Build.VERSION.SDK_INT<13){
 ////			int screenWidth = UniversCine.getScreenWidth(context);
