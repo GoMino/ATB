@@ -16,7 +16,11 @@ import com.android.toolbox.Log.LogInterface;
 import com.android.toolbox.utils.DBHelper;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -27,6 +31,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -135,10 +140,10 @@ public class ToolBox {
 		int screenWidth = getScreenWidth(context);
 		Log.v(TAG, "[is7inchTablet] screenwidth:"+screenWidth + ((Build.VERSION.SDK_INT>=13)?" smallestScreenWidthDp:"+config.smallestScreenWidthDp:""));
 	    if (getSmallestWidthDp(context) >= 600) {
-	    	int naturalOrientation = getDefaultOrientation(context);
-	    	if(naturalOrientation==ActivityInfo.SCREEN_ORIENTATION_PORTRAIT || naturalOrientation==ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT){
+//	    	int naturalOrientation = getDefaultOrientation(context);
+//	    	if(naturalOrientation==ActivityInfo.SCREEN_ORIENTATION_PORTRAIT || naturalOrientation==ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT){
 	    		return true;
-	    	}
+//	    	}
 	     } 
 //		else if(Build.VERSION.SDK_INT<13){
 ////			int screenWidth = UniversCine.getScreenWidth(context);
@@ -536,6 +541,40 @@ public class ToolBox {
 		}
 		Log.e(TAG, "isSerialized " + SER_FILE_PATH + " => no");
 		return false;
+	}
+	
+	public static Notification createNotification(Context context, int id, String title, String message, Class activityToLaunch){
+	    Intent intent = new Intent(context, activityToLaunch);
+	    intent.setAction(Intent.ACTION_MAIN);
+	    intent.addCategory(Intent.CATEGORY_LAUNCHER);
+
+	    PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+	    NotificationCompat.Builder mBuilder =
+	            new NotificationCompat.Builder(context.getApplicationContext())
+	            .setTicker(message)
+	            .setSmallIcon(R.drawable.ic_launcher)
+	            .setContentTitle(title)
+	            .setContentText(message)
+	            .setWhen(System.currentTimeMillis())
+	            .setContentIntent(pendingIntent)
+	            .setDefaults(Notification.DEFAULT_SOUND)
+	            .setAutoCancel(true)
+	            .setOngoing(false)
+	            .setOnlyAlertOnce(true)
+	            .setLights(0xFFFF0000, 500, 500); //setLights (int argb, int onMs, int offMs)
+	    Notification notification = mBuilder.build();
+	    
+
+	    // show it in the notification list
+	    notification.setLatestEventInfo(context, title, message, pendingIntent);
+	    return notification;
+	    
+	}
+	
+	public static void showNotification(Context context, int id, Notification notification){
+		NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+	    notificationManager.notify(id, notification);
+	    Log.d(TAG, "notification should be shown");
 	}
 	
 }

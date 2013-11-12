@@ -5,8 +5,26 @@ package com.android.toolbox.views;
 
 import com.android.toolbox.Log;
 
+/**
+ * from http://stackoverflow.com/questions/5033012/auto-scale-textview-text-to-fit-within-bounds
+ */
+/**
+ *               DO WHAT YOU WANT TO PUBLIC LICENSE
+ *                    Version 2, December 2004
+ * 
+ * Copyright (C) 2004 Sam Hocevar <sam@hocevar.net>
+ * 
+ * Everyone is permitted to copy and distribute verbatim or modified
+ * copies of this license document, and changing it is allowed as long
+ * as the name is changed.
+ * 
+ *            DO WHAT YOU WANT TO PUBLIC LICENSE
+ *   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
+ * 
+ *  0. You just DO WHAT YOU WANT TO.
+ */
+
 import android.content.Context;
-import android.graphics.Canvas;
 import android.text.Layout.Alignment;
 import android.text.StaticLayout;
 import android.text.TextPaint;
@@ -15,15 +33,17 @@ import android.util.TypedValue;
 import android.widget.TextView;
 
 /**
- * from http://stackoverflow.com/questions/5033012/auto-scale-textview-text-to-fit-within-bounds
- * @author benoit
+ * Text view that auto adjusts text size to fit within the view.
+ * If the text size equals the minimum text size and still does not
+ * fit, append with an ellipsis.
+ * 
+ * @author Chase Colburn
+ * @since Apr 4, 2011
  */
-public class CustomFitTextView extends TextView {
-	
-	public final static String TAG = CustomFitTextView.class.getSimpleName();
-	
-	// Minimum text size for this text view
-    public static final float MIN_TEXT_SIZE = 6;
+public class AutoResizeTextView extends TextView {
+
+    // Minimum text size for this text view
+    public static final float MIN_TEXT_SIZE = 20;
 
     // Interface for resize notifications
     public interface OnTextResizeListener {
@@ -58,17 +78,17 @@ public class CustomFitTextView extends TextView {
     private boolean mAddEllipsis = true;
 
     // Default constructor override
-    public CustomFitTextView(Context context) {
+    public AutoResizeTextView(Context context) {
         this(context, null);
     }
 
     // Default constructor when inflating from XML file
-    public CustomFitTextView(Context context, AttributeSet attrs) {
+    public AutoResizeTextView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
     // Default constructor override
-    public CustomFitTextView(Context context, AttributeSet attrs, int defStyle) {
+    public AutoResizeTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         mTextSize = getTextSize();
     }
@@ -89,12 +109,10 @@ public class CustomFitTextView extends TextView {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         if (w != oldw || h != oldh) {
-        	Log.v(TAG, "[onSizeChanged]");
             mNeedsResize = true;
-            requestLayout();
         }
     }
-    
+
     /**
      * Register listener to receive resize notifications
      * @param listener
@@ -111,9 +129,8 @@ public class CustomFitTextView extends TextView {
         super.setTextSize(size);
         mTextSize = getTextSize();
     }
-    
 
-	/**
+    /**
      * Override the set text size to update our internal reference values
      */
     @Override
@@ -203,17 +220,12 @@ public class CustomFitTextView extends TextView {
             int widthLimit = (right - left) - getCompoundPaddingLeft() - getCompoundPaddingRight();
             int heightLimit = (bottom - top) - getCompoundPaddingBottom() - getCompoundPaddingTop();
             resizeText(widthLimit, heightLimit);
-            postInvalidate();
         }
         super.onLayout(changed, left, top, right, bottom);
     }
-    
-	@Override
-	protected void onDraw(Canvas canvas) {
-		super.onDraw(canvas);
-	}
 
-	/**
+
+    /**
      * Resize the text size with default width and height
      */
     public void resizeText() {
@@ -235,7 +247,11 @@ public class CustomFitTextView extends TextView {
         }
 
         // Get the text view's paint object
-        TextPaint textPaint = getPaint();
+        TextPaint paint = getPaint();
+        
+        // Draw using a static layout
+        // modified: use a copy of TextPaint for measuring
+        TextPaint textPaint = new TextPaint(paint);
 
         // Store the current text size
         float oldTextSize = textPaint.getTextSize();
@@ -282,8 +298,10 @@ public class CustomFitTextView extends TextView {
 
         // Some devices try to auto adjust line spacing, so force default line spacing
         // and invalidate the layout as a side effect
-        textPaint.setTextSize(targetTextSize);
-//        invalidate();
+//        textPaint.setTextSize(targetTextSize);
+//        setLineSpacing(mSpacingAdd, mSpacingMult);
+        // modified: setting text size via this.setTextSize (instead of textPaint.setTextSize(targetTextSize))
+        setTextSize(TypedValue.COMPLEX_UNIT_PX, targetTextSize);
         setLineSpacing(mSpacingAdd, mSpacingMult);
 
         // Notify the listener if registered
@@ -294,11 +312,18 @@ public class CustomFitTextView extends TextView {
         // Reset force resize flag
         mNeedsResize = false;
     }
-    
+
     // Set the text size of the text paint object and use a static layout to render text off screen before measuring
-    private int getTextHeight(CharSequence source, TextPaint paint, int width, float textSize) {
-        // Update the text paint object
-        paint.setTextSize(textSize);
+    private int getTextHeight(CharSequence source, TextPaint originalPaint, int width, float textSize) {
+//        // Update the text paint object
+//        paint.setTextSize(textSize);
+    	  // modified: make a copy of the original TextPaint object for measuring
+    	  // (apparently the object gets modified while measuring, see also the
+    	  // docs for TextView.getPaint() (which states to access it read-only)
+    	  TextPaint paint = new TextPaint(originalPaint);
+    	  // Update the text paint object
+    	  paint.setTextSize(textSize);
+    	
         // Measure using a static layout
         StaticLayout layout = new StaticLayout(source, paint, width, Alignment.ALIGN_NORMAL, mSpacingMult, mSpacingAdd, true);
         return layout.getHeight();
