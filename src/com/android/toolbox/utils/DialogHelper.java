@@ -29,6 +29,12 @@ public class DialogHelper {
 		ProgressDialogFragment progressFragment = ProgressDialogFragment.newInstance(message);
 		progressFragment.setCancelable(false);
 		progressFragment.show(mFragmentManager, ProgressDialogFragment.class.getSimpleName());
+		try{
+			mFragmentManager.executePendingTransactions();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+
 	}
 
 	public void dismissDialogIfPossiblebyTag(String tag){
