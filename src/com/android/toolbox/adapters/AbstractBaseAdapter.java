@@ -65,7 +65,11 @@ public abstract class AbstractBaseAdapter<T> extends BaseAdapter {
 	}
 	
 	public T getItemAtPosition(int position){
-		return mData.get(position);
+		T result = null;
+		if(position>=0 && position<mData.size()){
+			result = mData.get(position);
+		}
+		return result;
 	}
 	
 	public boolean isEmpty(){
