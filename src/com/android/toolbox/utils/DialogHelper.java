@@ -18,16 +18,20 @@ public class DialogHelper {
 	}
 
 	public void popupProgressDialog(){
-		popupProgressDialog(mDefaultLoadingString);
+		popupProgressDialog(mDefaultLoadingString, false);
 	}
 
 	public void popupProgressDialog(String message){
+		popupProgressDialog(message, false);
+	}
+
+	public void popupProgressDialog(String message, boolean cancelable){
 		Log.d("popup progress dialog");
 		if (mFragmentManager.findFragmentByTag(ProgressDialogFragment.class.getSimpleName()) != null){
 			return;
 		}
 		ProgressDialogFragment progressFragment = ProgressDialogFragment.newInstance(message);
-		progressFragment.setCancelable(false);
+		progressFragment.setCancelable(cancelable);
 		progressFragment.show(mFragmentManager, ProgressDialogFragment.class.getSimpleName());
 		try{
 			mFragmentManager.executePendingTransactions();
