@@ -27,6 +27,10 @@ public abstract class AbstractPagerAdapter<T> extends PagerAdapter {
 		notifyDataSetChanged();
 	}
 	
+	public List<T> getData(){
+		return mData;
+	}
+	
 	public T getItemAtPosition(int position){
 		return mData.get(position);
 	}
