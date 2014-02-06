@@ -11,22 +11,13 @@ import android.widget.BaseAdapter;
  */
 public abstract class AbstractBaseAdapter<T> extends BaseAdapter {
 
-	public interface CheckItemsListener{
-		public void updateOnCheck();
-	}
-	
-	protected CheckItemsListener checkListener;
 
 	protected List<T> mData;
-	protected List<T> mCheckedList;
 	
 	public AbstractBaseAdapter() {
 		mData = new ArrayList<T>();
 	}
 	
-	public void setCheckListener(CheckItemsListener l){
-		checkListener = l;
-	}
 	
 	public void setData(List<T> data){
 		if (mData!=null)
@@ -38,14 +29,6 @@ public abstract class AbstractBaseAdapter<T> extends BaseAdapter {
 	}
 	
 
-	public void setCheckedData(List<T> list){
-		mCheckedList = list;
-	}
-
-	public List<T> getCheckedData(){
-		return mCheckedList;
-	}
-	
 	public List<T> getData(){
 		return mData;
 	}
