@@ -13,13 +13,14 @@ import java.util.regex.Pattern;
 import org.apache.http.HttpResponse;
 import org.xmlpull.v1.XmlPullParserException;
 
+import com.android.toolbox.Log;
 import com.android.toolbox.network.http.HttpRequestUtil;
 import com.android.toolbox.xml.XmlPullParserUtil;
 
 import android.content.Context;
 
 public class SSDPDiscovery extends Thread {
-
+	public static boolean DEBUG = false;
 	boolean flag;
 	InetAddress group = null;
 	MulticastSocket clientSocket = null;
@@ -200,7 +201,7 @@ public class SSDPDiscovery extends Thread {
 	}
 	
 	public void log(String message){
-//		Log.d(message);
+		if(DEBUG) Log.d(message);
 		if(mListener!=null){
 			mListener.onNewMessage(message);
 		}

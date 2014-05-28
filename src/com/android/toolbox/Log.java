@@ -73,7 +73,7 @@ public class Log {
 	public static String getCurrentClassName(StackTraceElement caller){
 		String name = caller.getFileName();
 		if(name != null){
-			name += name.replace(".java", "");
+			name = name.replaceAll(".java", "");
 		}
 		return name;
 	}
