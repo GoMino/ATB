@@ -30,10 +30,11 @@ public class DialogHelper {
 		if (mFragmentManager.findFragmentByTag(ProgressDialogFragment.class.getSimpleName()) != null){
 			return;
 		}
-		ProgressDialogFragment progressFragment = ProgressDialogFragment.newInstance(message);
-		progressFragment.setCancelable(cancelable);
-		progressFragment.show(mFragmentManager, ProgressDialogFragment.class.getSimpleName());
 		try{
+			ProgressDialogFragment progressFragment = ProgressDialogFragment.newInstance(message);
+			progressFragment.setCancelable(cancelable);
+			progressFragment.show(mFragmentManager, ProgressDialogFragment.class.getSimpleName());
+
 			mFragmentManager.executePendingTransactions();
 		}catch(Exception e){
 			e.printStackTrace();

@@ -1130,7 +1130,17 @@ public class HorzListView extends FriendAdapterView<ListAdapter> implements Gest
 			return retValue;
 		}
 		if(mGestureDetector!=null)
-			retValue = mGestureDetector.onTouchEvent( event );
+		{
+			Log.e(TAG, "[onTouchEvent] gestureDetector event : " + event.getAction() );
+			try{
+				retValue = mGestureDetector.onTouchEvent( event );
+				Log.e(TAG, "[onTouchEvent] gestureDetector retvalue " + retValue );
+			}
+			catch(Exception e){
+				Log.e(TAG, "[onTouchEvent] gestureDetector exception " + e.getMessage() );
+				return false;
+			}
+		}
 
 		switch( event.getAction() ) {
 			case MotionEvent.ACTION_UP:
@@ -1151,7 +1161,7 @@ public class HorzListView extends FriendAdapterView<ListAdapter> implements Gest
 		if (mDownTouchPosition >= 0) {
 
 			// An item tap should make it selected, so scroll to this child.
-			scrollToSelect( mDownTouchPosition - mFirstPosition );
+//			scrollToSelect( mDownTouchPosition - mFirstPosition );
 
 			// Also pass the click so the client knows, if it wants to.
 			if (mShouldCallbackOnUnselectedItemClick || mDownTouchPosition == mSelectedPosition) {

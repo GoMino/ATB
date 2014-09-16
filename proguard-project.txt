@@ -18,11 +18,3 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
-
--dontwarn com.android.toolbox.R
--dontwarn com.android.toolbox.R$*
--dontwarn twitter4j.ProfileImage
--dontwarn twitter4j.RelatedResults
--dontwarn twitter4j.Tweet
--dontwarn twitter4j.internal.json.ProfileImageImpl
--dontwarn twitter4j.internal.json.RelatedResultsJSONImpl
