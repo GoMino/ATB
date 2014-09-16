@@ -1156,12 +1156,16 @@ public class HorzListView extends FriendAdapterView<ListAdapter> implements Gest
 		return retValue;
 	}
 
+	private boolean _performScrollOnTap = true;
+	public void setPerformScrollOnTap(boolean performScrollOnTap){
+		_performScrollOnTap = performScrollOnTap;
+	}
 	public boolean onSingleTapUp (MotionEvent e) {
 
 		if (mDownTouchPosition >= 0) {
 
 			// An item tap should make it selected, so scroll to this child.
-//			scrollToSelect( mDownTouchPosition - mFirstPosition );
+			if(_performScrollOnTap) scrollToSelect( mDownTouchPosition - mFirstPosition );
 
 			// Also pass the click so the client knows, if it wants to.
 			if (mShouldCallbackOnUnselectedItemClick || mDownTouchPosition == mSelectedPosition) {
@@ -1174,6 +1178,7 @@ public class HorzListView extends FriendAdapterView<ListAdapter> implements Gest
 		return false;
 	}
 
+	
 	public boolean onFling (MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 
 		if (!mShouldCallbackDuringFling) {
