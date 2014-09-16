@@ -1,11 +1,17 @@
 package com.android.toolbox.network.ssdp;
 
+import java.io.Serializable;
+
 /**
  * Created by gomino on 6/13/13.
  */
-public class SSDPDevice {
+public class SSDPDevice implements Serializable{
 
-    private String mId;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6805706160041268336L;
+	private String mId;
     private String mLocation;
     private String mSearchTarget;
     private String mIp;
