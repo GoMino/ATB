@@ -140,7 +140,7 @@ public class ToolBox {
 		int screenWidth = getScreenWidth(context);
 		long smallestWidthDp = getSmallestWidthDp(context);
 		Log.v(TAG, "[is7inchTablet] screenwidth:"+screenWidth + ((Build.VERSION.SDK_INT>=13)?" smallestScreenWidthDp:"+config.smallestScreenWidthDp:""));
-	    if (smallestWidthDp >= 600 && smallestWidthDp < 720) {
+	    if (smallestWidthDp >= 600) {
 //	    	int naturalOrientation = getDefaultOrientation(context);
 //	    	if(naturalOrientation==ActivityInfo.SCREEN_ORIENTATION_PORTRAIT || naturalOrientation==ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT){
 	    		return true;
