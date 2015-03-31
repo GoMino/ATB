@@ -363,7 +363,7 @@ public class Log {
 	}
 	
 	public static void logVeryLongString(String sb){
-		if (sb.length() > 4000) {
+		if (sb != null) {
 		    Log.d("sb.length = " + sb.length());
 		    int chunkCount = sb.length() / 4000;     // integer division
 		    for (int i = 0; i <= chunkCount; i++) {
