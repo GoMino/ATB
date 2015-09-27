@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="CustomDialogTheme" parent="@android:style/Theme.DeviceDefault.Dialog.NoActionBar"/>
+
+</resources>
